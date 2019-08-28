@@ -16,7 +16,7 @@
  * Elasticquent results collection methods return the results we expect to verify this.
  */
 
-class ElasticSearchMethodsTest extends PHPUnit_Framework_TestCase
+class ElasticSearchMethodsTest extends  \PHPUnit\Framework\TestCase
 {
     protected $expectedHits = [
             'total' => 2,
