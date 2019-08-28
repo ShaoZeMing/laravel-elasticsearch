@@ -1,6 +1,6 @@
 <?php
 
-namespace c;
+namespace ShaoZeMing\LaravelElasticsearch;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application as LaravelApplication;
