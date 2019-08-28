@@ -1,9 +1,9 @@
 # Elasticsearch   for laravel5.*  or  lumen
 
 ---
-[![](https://travis-ci.org/ShaoZeMing/laravel-crypt.svg?branch=master)](https://travis-ci.org/ShaoZeMing/laravel-crypt) 
-[![](https://img.shields.io/packagist/v/ShaoZeMing/laravel-crypt.svg)](https://packagist.org/packages/shaozeming/laravel-crypt) 
-[![](https://img.shields.io/packagist/dt/ShaoZeMing/laravel-crypt.svg)](https://packagist.org/packages/shaozeming/laravel-crypt)
+[![](https://travis-ci.org/ShaoZeMing/laravel-elasticsearch.svg?branch=master)](https://travis-ci.org/ShaoZeMing/laravel-elasticsearch) 
+[![](https://img.shields.io/packagist/v/ShaoZeMing/laravel-elasticsearch.svg)](https://packagist.org/packages/shaozeming/laravel-elasticsearch) 
+[![](https://img.shields.io/packagist/dt/ShaoZeMing/laravel-elasticsearch.svg)](https://packagist.org/packages/shaozeming/laravel-elasticsearch)
 
 ## Installing
 
