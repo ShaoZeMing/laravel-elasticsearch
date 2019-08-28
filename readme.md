@@ -1,14 +1,16 @@
-# ShaoZeMing\LaravelElasticsearch
+# Elasticsearch   for laravel5.*  or  lumen
 
-_Elasticsearch for Eloquent Laravel Models_
+---
+[![](https://travis-ci.org/ShaoZeMing/laravel-crypt.svg?branch=master)](https://travis-ci.org/ShaoZeMing/laravel-crypt) 
+[![](https://img.shields.io/packagist/v/ShaoZeMing/laravel-crypt.svg)](https://packagist.org/packages/shaozeming/laravel-crypt) 
+[![](https://img.shields.io/packagist/dt/ShaoZeMing/laravel-crypt.svg)](https://packagist.org/packages/shaozeming/laravel-crypt)
 
-ShaoZeMing\LaravelElasticsearch makes working with [Elasticsearch](http://www.elasticsearch.org/) and [Eloquent](http://laravel.com/docs/eloquent) models easier by mapping them to Elasticsearch types. You can use the default settings or define how Elasticsearch should index and search your Eloquent models right in the model.
+## Installing
 
-ShaoZeMing\LaravelElasticsearch uses the [official Elasticsearch PHP API](https://github.com/elasticsearch/elasticsearch-php). To get started, you should have a basic knowledge of how Elasticsearch works (indexes, types, mappings, etc).
+```shell
+$ composer require shaozeming/laravel-elasticsearch -v
+```
 
-# Elasticsearch Requirements
-
-You must be running _at least_ Elasticsearch 1.0. Elasticsearch 0.9 and below *will not work* and are not supported.
 
 ## Contents
 
