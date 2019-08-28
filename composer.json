@@ -1,0 +1,43 @@
+{
+  "name": "shaozeming/laravel-elasticsearch",
+  "type": "library",
+  "description": "Maps Laravel and lumen Eloquent models to Elasticsearch types.",
+  "keywords": [
+    "elasticsearch",
+    "eloquent",
+    "laravel",
+    "lumen"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Adam Fairholm and  ShaoZeMing",
+      "email": "adam.fairholm@gmail.com and szm19920426@gmail.com ",
+      "homepage": "https://blog.4d4k.com/"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "illuminate/container": "~4.2|^5",
+    "illuminate/database": "~4.2|^5",
+    "illuminate/config": "~4.2|^5",
+    "nesbot/carbon": "~1.0|~2",
+    "elasticsearch/elasticsearch": "~6.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.3",
+    "mockery/mockery": "^0.9.9"
+  },
+  "autoload": {
+    "psr-4": {
+      "ShaoZeMing\\LaravelElasticsearch\\": "./src"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "ShaoZeMing\\LaravelElasticsearch\\ElasticquentServiceProvider"
+      ]
+    }
+  }
+}
