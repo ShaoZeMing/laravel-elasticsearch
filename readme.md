@@ -15,7 +15,7 @@ $ composer require shaozeming/laravel-elasticsearch -v
 ## Contents
 
 * [Overview](#overview)
-    * [How ShaoZeMing\LaravelElasticsearch Works](#how-elasticquent-works)
+    * [How ShaoZeMing\LaravelElasticsearch Works](#how-elasticsearch-works)
 * [Setup](#setup)
     * [Elasticsearch Configuration](#elasticsearch-configuration)
     * [Indexes and Mapping](#indexes-and-mapping)
@@ -26,7 +26,7 @@ $ composer require shaozeming/laravel-elasticsearch -v
     * [Search Collections](#search-collections)
     * [Search Collection Documents](#search-collection-documents)
     * [Chunking results from Elastiquent](#chunking-results-from-elastiquent)
-    * [Using the Search Collection Outside of ShaoZeMing\LaravelElasticsearch](#using-the-search-collection-outside-of-elasticquent)
+    * [Using the Search Collection Outside of ShaoZeMing\LaravelElasticsearch](#using-the-search-collection-outside-of-elasticsearch)
 * [More Options](#more-options)
     * [Document Ids](#document-ids)
     * [Document Data](#document-data)
@@ -35,7 +35,7 @@ $ composer require shaozeming/laravel-elasticsearch -v
 
 ## Reporting Issues
 
-If you do find an issue, please feel free to report it with [GitHub's bug tracker](https://github.com/elasticquent/ShaoZeMing\LaravelElasticsearch/issues) for this project.
+If you do find an issue, please feel free to report it with [GitHub's bug tracker](https://github.com/elasticsearch/ShaoZeMing\LaravelElasticsearch/issues) for this project.
 
 Alternatively, fork the project and make a pull request :)
 
@@ -75,7 +75,7 @@ Before you start using ShaoZeMing\LaravelElasticsearch, make sure you've install
 
 To get started, add ShaoZeMing\LaravelElasticsearch to you composer.json file:
 
-    "elasticquent/elasticquent": "dev-master"
+    "elasticsearch/elasticsearch": "dev-master"
 
 Once you've run a `composer update`, you need to register Laravel service provider, in your `config/app.php`:
 
@@ -110,7 +110,7 @@ Now your Eloquent model has some extra methods that make it easier to index your
 
 ### Elasticsearch Configuration
 
-By default, ShaoZeMing\LaravelElasticsearch will connect to `localhost:9200` and use `default` as index name, you can change this and the other settings in the configuration file. You can add the `elasticquent.php` config file at `/app/config/elasticquent.php` for Laravel 4, or use the following Artisan command to publish the configuration file into your config directory for Laravel 5:
+By default, ShaoZeMing\LaravelElasticsearch will connect to `localhost:9200` and use `default` as index name, you can change this and the other settings in the configuration file. You can add the `elasticsearch.php` config file at `/app/config/elasticsearch.php` for Laravel 4, or use the following Artisan command to publish the configuration file into your config directory for Laravel 5:
 
 ```shell
 $ php artisan vendor:publish --provider="ShaoZeMing\LaravelElasticsearch\ElasticquentServiceProvider"
@@ -247,7 +247,7 @@ You can also get the type mapping and check if it exists.
 
 ### Setting a Custom Index Name
 
-By default, ShaoZeMing\LaravelElasticsearch will look for the `default_index` key within your configuration file(`config/elasticquent.php`). To set the default value for an index being used, you can edit this file and set the `default_index` key:
+By default, ShaoZeMing\LaravelElasticsearch will look for the `default_index` key within your configuration file(`config/elasticsearch.php`). To set the default value for an index being used, you can edit this file and set the `default_index` key:
 
 ```php
 return array(

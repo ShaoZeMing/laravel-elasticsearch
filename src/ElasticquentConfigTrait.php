@@ -11,7 +11,7 @@ trait ElasticquentConfigTrait
      */
     public function getIndexName()
     {
-        // The first thing we check is if there is an elasticquent
+        // The first thing we check is if there is an elasticsearch
         // config file and if there is a default index.
         $index_name = $this->getElasticConfig('default_index');
 
@@ -30,7 +30,7 @@ trait ElasticquentConfigTrait
      * @param string $prefix filename of configuration file
      * @return array configuration
      */
-    public function getElasticConfig($key = 'config', $prefix = 'elasticquent')
+    public function getElasticConfig($key = 'config', $prefix = 'elasticsearch')
     {
         $key = $prefix . ($key ? '.' : '') . $key;
 
@@ -62,7 +62,7 @@ trait ElasticquentConfigTrait
             throw new \Exception('Config file not found.');
         }
 
-        return new \Illuminate\Config\Repository(array('elasticquent' => require($config_file)));
+        return new \Illuminate\Config\Repository(array('elasticsearch' => require($config_file)));
     }
 
     /**
@@ -73,6 +73,6 @@ trait ElasticquentConfigTrait
      */
     protected function getConfigFile()
     {
-        return __DIR__ . '/config/elasticquent.php';
+        return __DIR__ . '/config/elasticsearch.php';
     }
 }

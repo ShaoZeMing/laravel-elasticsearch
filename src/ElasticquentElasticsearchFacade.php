@@ -16,6 +16,6 @@ class ElasticquentElasticsearchFacade extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'elasticquent.elasticsearch';
+        return 'elasticsearch.elasticsearch';
     }
 }

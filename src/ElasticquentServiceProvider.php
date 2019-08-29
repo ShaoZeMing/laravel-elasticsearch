@@ -17,14 +17,14 @@ class ElasticquentServiceProvider extends ServiceProvider
     {
 
 
-        $source = realpath(__DIR__.'/config/elasticquent.php');
+        $source = realpath(__DIR__ . '/config/elasticsearch.php');
 
         if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
-            $this->publishes([$source => config_path('elasticquent.php')]);
+            $this->publishes([$source => config_path('elasticsearch.php')]);
         } elseif ($this->app instanceof LumenApplication) {
-            $this->app->configure('elasticquent');
+            $this->app->configure('elasticsearch');
         }
-        $this->mergeConfigFrom($source, 'elasticquent');
+        $this->mergeConfigFrom($source, 'elasticsearch');
 
     }
 
@@ -36,13 +36,13 @@ class ElasticquentServiceProvider extends ServiceProvider
     public function register()
     {
         // Support class
-        $this->app->singleton('elasticquent.support', function () {
+        $this->app->singleton('elasticsearch.support', function () {
             return new ElasticquentSupport;
         });
 
         // Elasticsearch client instance
-        $this->app->singleton('elasticquent.elasticsearch', function ($app) {
-            return $app->make('elasticquent.support')->getElasticSearchClient();
+        $this->app->singleton('elasticsearch.elasticsearch', function ($app) {
+            return $app->make('elasticsearch.support')->getElasticSearchClient();
         });
     }
 }
