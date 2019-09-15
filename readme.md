@@ -13,7 +13,18 @@ $ composer require shaozeming/laravel-elasticsearch -v
 
 ## Overview
 
-快熟使用
+快速使用
+
+- 模型中引用Trait
+
+```php
+use ShaoZeMing\LaravelElasticsearch\ElasticquentTrait;
+
+class Book extends Eloquent
+{
+    use ElasticquentTrait;
+}
+```
 
 - 添加索引
 ```php
@@ -28,7 +39,7 @@ $ composer require shaozeming/laravel-elasticsearch -v
     echo $books->totalHits();
 ```
 
-Plus, you can still use all the Eloquent collection functionality:
+同时，您仍然可以使用所有Eloquent集合功能：
 
 ```php
     $books = $books->filter(function ($book) {
@@ -43,16 +54,12 @@ Plus, you can still use all the Eloquent collection functionality:
 
 
 
-
 ## Setup
 
 开始使用ShaoZeMing\LaravelElasticsearch之前，请确保已安装[Elasticsearch](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/_installation.html).
 
 
-
 ### Laravel
-
-
 
 ```php
 // config/app.php
@@ -69,13 +76,13 @@ And publish the config file:
 $ php artisan vendor:publish --provider=ShaoZeMing\\LaravelElasticsearch\ElasticquentServiceProvider
 ```
 
-if you want to use facade mode, you can register a facade name what you want to use, for example `elasticsearch`: 
+if you want to use facade mode, you can register a facade name what you want to use, for example `LaravelElasticsearch`: 
 
 ```php
 // config/app.php
 
     'aliases' => [
-        'Translate' => ShaoZeMing\LaravelElasticsearch\ElasticquentServiceProvider::class,   //This is default in laravel 5.5
+        'LaravelElasticsearch' => ShaoZeMing\LaravelElasticsearch\ElasticquentServiceProvider::class,   
     ],
 ```
 
@@ -109,7 +116,7 @@ return array(
     */
 
     'config' => [
-        'hosts'     => ['localhost:9200'],
+        'hosts'     => ['localhost:9200'],   //es服务器:端口
         'retries'   => 1,
     ],
 
@@ -129,31 +136,23 @@ return array(
 ```
 
 
-### Indexes and Mapping
 
 
 
-Then add the ShaoZeMing\LaravelElasticsearch trait to any Eloquent model that you want to be able to index in Elasticsearch:
+
+Eloquent模型有一些额外的方法，可以使用Elasticsearch更轻松地索引模型的数据。
+虽然您可以通过Elasticsearch API构建索引和映射，但您也可以使用一些辅助方法直接从模型构建索引和类型。
+
+
+如果您想要一种简单的方法来创建索引，ShaoZeMing\LaravelElasticsearch模型具有以下方法：
 
 ```php
-use ShaoZeMing\LaravelElasticsearch\ElasticquentTrait;
-
-class Book extends Eloquent
-{
-    use ElasticquentTrait;
-}
-```
-
-Now your Eloquent model has some extra methods that make it easier to index your model's data using Elasticsearch.
-
-
-While you can definitely build your indexes and mapping through the Elasticsearch API, you can also use some helper methods to build indexes and types right from your models.
-
-If you want a simple way to create indexes, ShaoZeMing\LaravelElasticsearch models have a function for that:
 
     Book::createIndex($shards = null, $replicas = null);
 
-For custom analyzer, you can set an `indexSettings` property in your model and define the analyzers from there:
+```
+
+若需要自定义分析器，您可以在模型中设置indexSettings属性并从那里定义分析器：
 
 ```php
     /**
@@ -202,7 +201,7 @@ For custom analyzer, you can set an `indexSettings` property in your model and d
 
 ```
 
-For mapping, you can set a `mappingProperties` property in your model and use some mapping functions from there:
+关于映射，您可以在模型中设置mappingProperties属性，并使用一些映射函数：
 
 ```php
 protected $mappingProperties = array(
@@ -213,34 +212,34 @@ protected $mappingProperties = array(
 );
 ```
 
-If you'd like to setup a model's type mapping based on your mapping properties, you can use:
+根据映射属性设置模型的类型映射：
 
 ```php
     Book::putMapping($ignoreConflicts = true);
 ```
 
-To delete a mapping:
+删除映射:
 
 ```php
     Book::deleteMapping();
 ```
 
-To rebuild (delete and re-add, useful when you make important changes to your mapping) a mapping:
+重建映射:
 
 ```php
     Book::rebuildMapping();
 ```
 
-You can also get the type mapping and check if it exists.
+获取类型映射并检查它是否存在。
 
 ```php
     Book::mappingExists();
     Book::getMapping();
 ```
 
-### Setting a Custom Index Name
+### 设置项目索引名称
 
-By default, ShaoZeMing\LaravelElasticsearch will look for the `default_index` key within your configuration file(`config/elasticsearch.php`). To set the default value for an index being used, you can edit this file and set the `default_index` key:
+配置文件 `default_index` key设置:
 
 ```php
 return array(
@@ -260,77 +259,49 @@ return array(
 );
 ```
 
-If you'd like to have a more dynamic index, you can also override the default configuration with a `getIndexName` method inside your Eloquent model:
-
-```php
-function getIndexName()
-{
-    return 'custom_index_name';
-}
-```
-
-Note: If no index was specified, ShaoZeMing\LaravelElasticsearch will use a hardcoded string with the value of `default`.
-
-### Setting a Custom Type Name
-
-By default, ShaoZeMing\LaravelElasticsearch will use the table name of your models as the type name for indexing. If you'd like to override it, you can with the `getTypeName` function.
-
-```php
-function getTypeName()
-{
-    return 'custom_type_name';
-}
-```
-
-To check if the type for the ShaoZeMing\LaravelElasticsearch model exists yet, use `typeExists`:
-
-```php
-    $typeExists = Book::typeExists();
-```
 
 ## Indexing Documents
 
-To index all the entries in an Eloquent model, use `addAllToIndex`:
+索引整个模型数据 `addAllToIndex`:
 
 ```php
     Book::addAllToIndex();
 ```
 
-You can also index a collection of models:
+索引多条:
 
 ```php
     $books = Book::where('id', '<', 200)->get();
     $books->addToIndex();
 ```
 
-You can index individual entries as well:
+索引单条:
 
 ```php
     $book = Book::find($id);
     $book->addToIndex();
 ```
 
-You can also reindex an entire model:
-
+您还可以重新索引整个模型：
 ```php
     Book::reindex();
 ```
 
 ## Searching
 
-There are three ways to search in ShaoZeMing\LaravelElasticsearch. All three methods return a search collection.
+三种搜索方式
 
-### Simple term search
+### 简单搜索
 
-The first method is a simple term search that searches all fields.
+第一种方法是搜索所有字段的简单术语搜索。
 
 ```php
     $books = Book::search('Moby Dick');
 ```
 
-### Query Based Search
+### 基于查询的搜索
 
-The second is a query based search for more complex searching needs:
+第二种是基于查询的搜索，以满足更复杂的搜索需求：
 
 ```php
     public static function searchByQuery($query = null, $aggregations = null, $sourceFields = null, $limit = null, $offset = null, $sort = null)
@@ -341,19 +312,18 @@ The second is a query based search for more complex searching needs:
 ```php
     $books = Book::searchByQuery(array('match' => array('title' => 'Moby Dick')));
 ```
-Here's the list of available parameters:
+这是可用参数列表：
 
-- `query` - Your ElasticSearch Query
-- `aggregations` - The Aggregations you wish to return. [See Aggregations for details](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations.html).
-- `sourceFields` - Limits returned set to the selected fields only
-- `limit` - Number of records to return
-- `offset` - Sets the record offset (use for paging results)
-- `sort` - Your sort query
+- query - 您的ElasticSearch查询
+- aggregations - 您希望返回的聚合。有关详细信息，请参阅聚合。
+- sourceFields - 返回的限制仅设置为选定的字段
+- limit - 要返回的记录数
+- offset - 设置记录偏移量（用于分页结果）
+- sort - 您的排序查询
 
-### Raw queries
+### 原始查询
 
-The final method is a raw query that will be sent to Elasticsearch. This method will provide you with the most flexibility
-when searching for records inside Elasticsearch:
+最终方法是将发送到Elasticsearch的原始查询。在Elasticsearch中搜索记录时，此方法将为您提供最大的灵活性，搜索语法请查看ES官方文档
 
 ```php
     $books = Book::complexSearch(array(
@@ -367,46 +337,43 @@ when searching for records inside Elasticsearch:
     ));
 ```
 
-This is the equivalent to:
+这条查询相当于:
 ```php
     $books = Book::searchByQuery(array('match' => array('title' => 'Moby Dick')));
 ```
 
-### Search Collections
+### 搜索结果集合
 
-When you search on an ShaoZeMing\LaravelElasticsearch model, you get a search collection with some special functions.
+当您在ShaoZeMing\LaravelElasticsearch模型上搜索时，您将获得具有一些特殊功能的搜索集合。
 
-You can get total hits:
-
+您可以获得总点击次数：
 ```php
     $books->totalHits();
 ```
 
-Access the shards array:
-
+访问分片数组：
 ```php
     $books->shards();
 ```
 
-Access the max score:
-
+获得最高分：
 ```php
     $books->maxScore();
 ```
 
-Access the timed out boolean property:
+访问超时布尔属性：
 
 ```php
     $books->timedOut();
 ```
 
-And access the took property:
+并访问take属性：
 
 ```php
     $books->took();
 ```
 
-And access search aggregations - [See Aggregations for details](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations.html):
+并访问搜索聚合 - 有关详细信息，请参阅聚合： - [See Aggregations for details](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-aggregations.html):
 
 ```php
     $books->getAggregations();
@@ -414,21 +381,19 @@ And access search aggregations - [See Aggregations for details](http://www.elast
 
 ### Search Collection Documents
 
-Items in a search result collection will have some extra data that comes from Elasticsearch. You can always check and see if a model is a document or not by using the `isDocument` function:
-
+使用isDocument函数检查并查看模型是否为文档：
 ```php
     $book->isDocument();
 ```
 
-You can check the document score that Elasticsearch assigned to this document with:
-
+检查Elasticsearch分配给此文档的文档分数
 ```php
     $book->documentScore();
 ```
 
-### Chunking results from Elastiquent
+### 拆分搜索集合
 
-Similar to `Illuminate\Support\Collection`, the `chunk` method breaks the ShaoZeMing\LaravelElasticsearch collection into multiple, smaller collections of a given size:
+与Illuminate \ Support \ Collection类似，chunk方法将ShaoZeMing\LaravelElasticsearch集合分解为给定大小的多个较小的集合：
 
 ```php
     $all_books = Book::searchByQuery(array('match' => array('title' => 'Moby Dick')));
@@ -436,9 +401,9 @@ Similar to `Illuminate\Support\Collection`, the `chunk` method breaks the ShaoZe
 ```
 
 
-### Using the Search Collection Outside of ShaoZeMing\LaravelElasticsearch
+### 使用ShaoZeMing\LaravelElasticsearch之外的搜索集合
 
-If you're dealing with raw search data from outside of ShaoZeMing\LaravelElasticsearch, you can use the ShaoZeMing\LaravelElasticsearch search results collection to turn that data into a collection.
+如果您正在处理来自ShaoZeMing\LaravelElasticsearch外部的原始搜索数据，则可以使用ShaoZeMing\LaravelElasticsearch搜索结果集合将该数据转换为集合。
 
 ```php
 $client = new \Elasticsearch\Client();
@@ -454,15 +419,16 @@ $collection = Book::hydrateElasticsearchResult($client->search($params));
 
 ```
 
-## More Options
+## 其他设置
 
-### Document IDs
+### 文档索引主键id
 
-ShaoZeMing\LaravelElasticsearch will use whatever is set as the `primaryKey` for your Eloquent models as the id for your Elasticsearch documents.
+将使用设置为您的Eloquent模型的primaryKey作为Elasticsearch文档的ID。
 
-### Document Data
+### 文档数据体结构
 
-By default, ShaoZeMing\LaravelElasticsearch will use the entire attribute array for your Elasticsearch documents. However, if you want to customize how your search documents are structured, you can set a `getIndexDocumentData` function that returns you own custom document array.
+默认情况下，将使用整个属性数组作为Elasticsearch文档。
+但是，如果要自定义搜索文档的结构，可以设置getIndexDocumentData函数，该函数返回您自己的自定义文档数组。
 
 ```php
 function getIndexDocumentData()
@@ -474,11 +440,10 @@ function getIndexDocumentData()
     );
 }
 ```
-Be careful with this, as ShaoZeMing\LaravelElasticsearch reads the document source into the Eloquent model attributes when creating a search result collection, so make sure you are indexing enough data for your the model functionality you want to use.
 
-### Using ShaoZeMing\LaravelElasticsearch With Custom Collections
+### 将与自定义集合模型一起使用
 
-If you are using a custom collection with your Eloquent models, you just need to add the `ElasticquentCollectionTrait` to your collection so you can use `addToIndex`.
+如果您在Eloquent模型中使用自定义集合，则只需将ElasticquentCollectionTrait添加到集合中，这样就可以使用addToIndex。
 
 ```php
 class MyCollection extends \Illuminate\Database\Eloquent\Collection
