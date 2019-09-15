@@ -11,44 +11,17 @@
 $ composer require shaozeming/laravel-elasticsearch -v
 ```
 
-
-## Contents
-
-* [Overview](#overview)
-    * [How ShaoZeMing\LaravelElasticsearch Works](#how-elasticsearch-works)
-* [Setup](#setup)
-    * [Elasticsearch Configuration](#elasticsearch-configuration)
-    * [Indexes and Mapping](#indexes-and-mapping)
-    * [Setting a Custom Index Name](#setting-a-custom-index-name)
-    * [Setting a Custom Type Name](#setting-a-custom-type-name)
-* [Indexing Documents](#indexing-documents)
-* [Searching](#searching)
-    * [Search Collections](#search-collections)
-    * [Search Collection Documents](#search-collection-documents)
-    * [Chunking results from Elastiquent](#chunking-results-from-elastiquent)
-    * [Using the Search Collection Outside of ShaoZeMing\LaravelElasticsearch](#using-the-search-collection-outside-of-elasticsearch)
-* [More Options](#more-options)
-    * [Document Ids](#document-ids)
-    * [Document Data](#document-data)
-    * [Using ShaoZeMing\LaravelElasticsearch With Custom Collections](#using-elasticquetn-with-custom-collections)
-* [Roadmap](#roadmap)
-
-## Reporting Issues
-
-If you do find an issue, please feel free to report it with [GitHub's bug tracker](https://github.com/elasticsearch/ShaoZeMing\LaravelElasticsearch/issues) for this project.
-
-Alternatively, fork the project and make a pull request :)
-
 ## Overview
 
-ShaoZeMing\LaravelElasticsearch allows you take an Eloquent model and easily index and search its contents in Elasticsearch.
+快熟使用
 
+- 添加索引
 ```php
     $books = Book::where('id', '<', 200)->get();
     $books->addToIndex();
 ```
 
-When you search, instead of getting a plain array of search results, you instead get an Eloquent collection with some special Elasticsearch functionality.
+- 直接搜索
 
 ```php
     $books = Book::search('Moby Dick');
@@ -63,58 +36,61 @@ Plus, you can still use all the Eloquent collection functionality:
     });
 ```
 
-Check out the rest of the documentation for how to get started using Elasticsearch and ShaoZeMing\LaravelElasticsearch!
 
-### How ShaoZeMing\LaravelElasticsearch Works
+### 工作原理
 
-When using a database, Eloquent models are populated from data read from a database table. With ShaoZeMing\LaravelElasticsearch, models are populated by data indexed in Elasticsearch. The whole idea behind using Elasticsearch for search is that its fast and light, so you model functionality will be dictated by what data has been indexed for your document.
+搜索时候，将从Es数据库中索引数据，并返回Eloquent对象数据
+
+
+
 
 ## Setup
 
-Before you start using ShaoZeMing\LaravelElasticsearch, make sure you've installed [Elasticsearch](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/_installation.html).
+开始使用ShaoZeMing\LaravelElasticsearch之前，请确保已安装[Elasticsearch](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/_installation.html).
 
-To get started, add ShaoZeMing\LaravelElasticsearch to you composer.json file:
 
-    "elasticsearch/elasticsearch": "dev-master"
 
-Once you've run a `composer update`, you need to register Laravel service provider, in your `config/app.php`:
+### Laravel
 
-```php
-'providers' => [
-    ...
-    ShaoZeMing\LaravelElasticsearch\ElasticquentServiceProvider::class,
-],
-```
 
-We also provide a facade for elasticsearch-php client (which has connected using our settings), add following to your `config/app.php` if you need so.
 
 ```php
-'aliases' => [
-    ...
-    'Es' => ShaoZeMing\LaravelElasticsearch\ElasticquentElasticsearchFacade::class,
-],
+// config/app.php
+
+    'providers' => [
+        //...
+        ShaoZeMing\LaravelElasticsearch\ElasticquentServiceProvider::class,    //This is default in laravel 5.5
+    ],
 ```
 
-Then add the ShaoZeMing\LaravelElasticsearch trait to any Eloquent model that you want to be able to index in Elasticsearch:
-
-```php
-use ShaoZeMing\LaravelElasticsearch\ElasticquentTrait;
-
-class Book extends Eloquent
-{
-    use ElasticquentTrait;
-}
-```
-
-Now your Eloquent model has some extra methods that make it easier to index your model's data using Elasticsearch.
-
-### Elasticsearch Configuration
-
-By default, ShaoZeMing\LaravelElasticsearch will connect to `localhost:9200` and use `default` as index name, you can change this and the other settings in the configuration file. You can add the `elasticsearch.php` config file at `/app/config/elasticsearch.php` for Laravel 4, or use the following Artisan command to publish the configuration file into your config directory for Laravel 5:
+And publish the config file: 
 
 ```shell
-$ php artisan vendor:publish --provider="ShaoZeMing\LaravelElasticsearch\ElasticquentServiceProvider"
+$ php artisan vendor:publish --provider=ShaoZeMing\\LaravelElasticsearch\ElasticquentServiceProvider
 ```
+
+if you want to use facade mode, you can register a facade name what you want to use, for example `elasticsearch`: 
+
+```php
+// config/app.php
+
+    'aliases' => [
+        'Translate' => ShaoZeMing\LaravelElasticsearch\ElasticquentServiceProvider::class,   //This is default in laravel 5.5
+    ],
+```
+
+### lumen
+
+- 在 bootstrap/app.php 中 82 行左右：
+```
+$app->register( ShaoZeMing\LaravelElasticsearch\ElasticquentServiceProvider::class);
+```
+将 `vendor/shaozeming/laravel-elasticsearch/config/elasticsearch.php.php` 拷贝到项目根目录`/config`目录下，并将文件名改成`elasticsearch.php`。
+
+
+
+### Configuration
+
 
 ```php
 <?php
@@ -152,7 +128,24 @@ return array(
 
 ```
 
+
 ### Indexes and Mapping
+
+
+
+Then add the ShaoZeMing\LaravelElasticsearch trait to any Eloquent model that you want to be able to index in Elasticsearch:
+
+```php
+use ShaoZeMing\LaravelElasticsearch\ElasticquentTrait;
+
+class Book extends Eloquent
+{
+    use ElasticquentTrait;
+}
+```
+
+Now your Eloquent model has some extra methods that make it easier to index your model's data using Elasticsearch.
+
 
 While you can definitely build your indexes and mapping through the Elasticsearch API, you can also use some helper methods to build indexes and types right from your models.
 
