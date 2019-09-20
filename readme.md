@@ -393,7 +393,7 @@ return array(
 
 ### 拆分搜索集合
 
-与Illuminate \ Support \ Collection类似，chunk方法将ShaoZeMing\LaravelElasticsearch集合分解为给定大小的多个较小的集合：
+与Illuminate\Support\Collection类似，chunk方法将ShaoZeMing\LaravelElasticsearch集合分解为给定大小的多个较小的集合：
 
 ```php
     $all_books = Book::searchByQuery(array('match' => array('title' => 'Moby Dick')));
@@ -452,9 +452,3 @@ class MyCollection extends \Illuminate\Database\Eloquent\Collection
 }
 ```
 
-## Roadmap
-
-ShaoZeMing\LaravelElasticsearch currently needs:
-
-* Tests that mock ES API calls.
-* Support for routes
